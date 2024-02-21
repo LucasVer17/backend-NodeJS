@@ -1,16 +1,16 @@
-import express from "express"
+import express from "express";
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
-app.get("/", function (req, res){
-    res.send("Hello World")
+app.get("/", function (req, res) {
+  res.send("Hello World");
 });
 
 app.get("/oi", (req, res) => {
-    res.send("Olá mundo")
-})
+  res.send("Olá mundo");
+});
 
 app.listen(port, () => {
-    console.log("Rodando na porta " + port)
-})
+  console.log("Rodando na porta " + port);
+});

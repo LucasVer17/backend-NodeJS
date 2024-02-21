@@ -31,6 +31,25 @@ app.get("/item/:id", (req, res) => {
   res.send(item);
 });
 
+// Sinalizamos que o corpo da requisição está em JSON
+app.use(express.json());
+
+// Create -> POST /item
+app.post("/item", (req, res) => {
+  // Extraímos o corpo da requisição
+  const body = req.body;
+
+  // Pegamos o nome (string) que foi enviado dentro do corpo
+  const item = body.nome;
+
+  // Colocamos o nome dentro de uma lista de itens
+  lista.push(item);
+
+  // Enviamos uam resposta de suceso
+  res.send("Item adicionado com sucesso");
+  console.log(lista);
+});
+
 app.listen(port, () => {
   console.log("Rodando na porta " + port);
 });

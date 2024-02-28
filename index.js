@@ -1,5 +1,5 @@
 import express from "express";
-import { ClientEncryption, MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
 const app = express();
 const port = 3000;
@@ -23,47 +23,41 @@ async function main() {
     res.send("Olá mundo");
   });
 
-  // Lista de Personagens
   const lista = ["Rick Sanchez", "Morty Smith", "Summer Smith"];
 
   const db = client.db(dbName);
   const collection = db.collection("items");
 
-  //Read all => GET
   app.get("/item", async (req, res) => {
     const items = await collection.find().toArray();
     res.send(items);
   });
 
-  //Read By Id -> GET /item/:id
-  app.get("/item/:id", (req, res) => {
-    // Acesso ID no parâmetro de rota
+  app.get("/item/:id", async (req, res) => {
     const id = req.params.id;
-
-    // Acesso item na lista baseado no ID recebido
-    const item = lista[id];
-
-    // Envio o item obtido como resposta HTTP
+    const item = await collection.findOne({ _id: new ObjectId(id) });
     res.send(item);
   });
 
-  // Sinalizamos que o corpo da requisição está em JSON
   app.use(express.json());
 
-  // Create -> POST /item
-  app.post("/item", (req, res) => {
-    // Extraímos o corpo da requisição
-    const body = req.body;
+  app.post("/item", async (req, res) => {
+    const item = req.body;
+    await collection.insertOne(item);
+    res.send(item);
+  });
 
-    // Pegamos o nome (string) que foi enviado dentro do corpo
-    const item = body.nome;
+  app.put("/item/:id", async (req, res) => {
+    const id = req.params.id;
+    const novoItem = req.body;
+    await collection.updateOne({ _id: new ObjectId(id) }, { $set: novoItem });
+    res.send("Item atualizado!");
+  });
 
-    // Colocamos o nome dentro de uma lista de itens
-    lista.push(item);
-
-    // Enviamos uam resposta de suceso
-    res.send("Item adicionado com sucesso");
-    console.log(lista);
+  app.delete("/item/:id", async (req, res) => {
+    const id = req.params.id;
+    await collection.deleteOne({ _id: new ObjectId(id) });
+    res.send("Item removido com sucesso");
   });
 
   app.listen(port, () => {

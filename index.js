@@ -1,6 +1,6 @@
 import express from "express";
 import { MongoClient, ObjectId } from "mongodb";
-require("dotenv").config();
+import "dotenv/config";
 
 const app = express();
 const port = 3000;

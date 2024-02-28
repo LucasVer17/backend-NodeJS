@@ -1,11 +1,11 @@
 import express from "express";
 import { MongoClient, ObjectId } from "mongodb";
+require("dotenv").config();
 
 const app = express();
 const port = 3000;
 
-const dbUrl =
-  "mongodb+srv://admin:zzUDlM57V2kLWxq1@cluster0.e16epq3.mongodb.net";
+const dbUrl = process.env.DATABASE_URL;
 const dbName = "JornadaBackend";
 
 async function main() {
